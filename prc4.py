@@ -95,7 +95,8 @@ if flg==1:
 else:
     print("not 4 adjacent")
     
-    
+
+
 
 print("------- program 8-adjacent-------------")
 
@@ -172,103 +173,111 @@ if flg==1:
 else:
     print("not 8 adjacent")
     
+
+print("xy=",img[y][x],"  ab=",img[b][a])
     
 
-print()
-flg=0
-
-for i in range(y-1,y+2):
+if img[y][x] in r and img[b][a] in r:
     
-    for j in range(x-1,x+2):
+
+    for i in range(y-1,y+2):
         
-        if i==y and j==x:
+        for j in range(x-1,x+2):
             
-            if i+1==b and j==a or i-1==b and j==a or i==b and j+1==a or i==b and j-1==a:
+            if i==y and j==x:
                 
-                flg=1
-                print("mm")
-            else:
-                
-                if i+1==b and j+1==a:
+                if i+1==b and j==a or i-1==b and j==a or i==b and j+1==a or i==b and j-1==a:
                     
-                    print("i+1 and j+1 = ",img[i+1][j+1],i,j)
+                    flg=1
+                    print("mm")
+                else:
                     
-                    if img[i+1][j] not in r:
+                    if i+1==b and j+1==a:
                         
-                        print("++")
-                        flg=1
-                        break
+                        print("i+1 and j+1 = ",img[i+1][j+1],i,j)
                         
-                    elif img[i][j+1] not in r:
+                        if img[i+1][j] not in r:
+                            
+                            print("++")
+                            flg=1
+                            break
+                            
+                        elif img[i][j+1] not in r:
+                            
+                            print("++el")
+                            flg=1
+                            break
+                        else:
+                            print("++else")
+                            flg=0
+                            break
                         
-                        print("++el")
-                        flg=1
-                        break
-                    else:
-                        print("++else")
-                        flg=0
-                        break
+                        
+                    elif i+1==b and j-1==a:
+                        
+                        print("i+1 and j-1 = ",img[i+1][j-1])
+                        
+                        if img[i][j-1] not in r:
+                            
+                            print("+-")
+                            flg=1
+                            break
+                            
+                        elif img[i+1][j] not in r:
+                            
+                            print("+-el")
+                            flg=1
+                            break
+                        else:
+                            print("+-else")
+                            flg=0
+                            break
                     
+                    elif i-1==b and j+1==a:
                     
-                elif i+1==b and j-1==a:
+                        print("i-1 and j+1 = ",img[i-1][j+1])
+                        
+                        if img[i-1][j] not in r:
+                            
+                            print("-+")
+                            flg=1
+                            break
+                            
+                        elif img[i][j+1] not in r:
+                            
+                            print("-+el")
+                            flg=1
+                            break
+                        else:
+                            print("-+else")
+                            flg=0
+                            break
                     
-                    print("i+1 and j-1 = ",img[i+1][j-1])
-                    
-                    if img[i][j-1] not in r:
+                    elif i-1==b and j-1==a:
                         
-                        print("+-")
-                        flg=1
-                        break
+                        print("i-1 and j-1 = ",img[i-1][j-1])
                         
-                    elif img[i+1][j] not in r:
-                        
-                        print("+-el")
-                        flg=1
-                        break
-                    else:
-                        print("+-else")
-                        flg=0
-                        break
-                
-                elif i-1==b and j+1==a:
-                
-                    print("i-1 and j+1 = ",img[i-1][j+1])
-                    
-                    if img[i-1][j] not in r:
-                        
-                        print("-+")
-                        flg=1
-                        break
-                        
-                    elif img[i][j+1] not in r:
-                        
-                        print("-+el")
-                        flg=1
-                        break
-                    else:
-                        print("-+else")
-                        flg=0
-                        break
-                
-                elif i-1==b and j-1==a:
-                    
-                    print("i-1 and j-1 = ",img[i-1][j-1])
-                    
-                    if img[i][j-1] not in r:
-                        
-                        print("--")
-                        flg=1
-                        break
-                        
-                    elif img[i-1][j] not in r:
-                        
-                        print("--el")
-                        flg=1
-                        break
-                    else:
-                        print("--else")
-                        flg=0
-                        break
+                        if img[i][j-1] not in r:
+                            
+                            print("--")
+                            flg=1
+                            break
+                            
+                        elif img[i-1][j] not in r:
+                            
+                            print("--el")
+                            flg=1
+                            break
+                        else:
+                            print("--else")
+                            flg=0
+                            break
+            
+else:
+    
+    flg=0
+    
+    
                     
                
     
@@ -285,6 +294,13 @@ else:
 
 
 
+
+    
+    
+
+print()
+flg=0
+    
 cv2.imshow("gray",img)
 
 
