@@ -12,21 +12,19 @@ import matplotlib.pyplot as pt
 img=cv2.imread("home.png",0)
 
 hid,wid=img.shape
-cv2.imshow("orignal",img)
+
+
+new_image = np.zeros((img.shape[0],img.shape[1]), dtype='uint8')
 
 print(wid,"x",hid)
 
-for i in range(0, hid):
-    
-    for j in range(0,wid):
-        
-        
-        if img[i][j]<215:
-            img[i][j]+=40
+
+new_image = cv2.convertScaleAbs(img, alpha=1, beta=80)
         
     
 
-cv2.imshow("manipulet",img)
+cv2.imshow("orignal",img)
+cv2.imshow("manipulat",new_image)
 
 print("hii")
 
