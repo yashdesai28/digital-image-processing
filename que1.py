@@ -31,14 +31,19 @@ equhist=cv2.calcHist([equ_img],[0],None,[256],[0,256])
 
 
 equ_img1=cv2.equalizeHist(img1)
-equhist1=cv2.calcHist([equ_img1],[0],None,[256],[0,256])
+
 
 
 
 equ_img2=cv2.equalizeHist(img2)
 equhist2=cv2.calcHist([equ_img2],[0],None,[256],[0,256])
 
-img_normalized = cv2.normalize(img3, None, 0.099, 1.2, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+img_normalized = cv2.normalize(img1, None, 0.5, 1.9, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+
+power_low=np.array(255*(img1/255)**3.6,dtype='uint8')
+equhist1=cv2.calcHist([power_low],[0],None,[256],[0,256])
+
+print(255*(237/255)**3.6)
 
 
 plt.plot(orihist)
@@ -87,7 +92,7 @@ cv2.imshow("orignal img2",img2)
 cv2.imshow("improve img2",equ_img2)
 
 
-cv2.imshow("improve img2 nor",img_normalized)
+cv2.imshow("power low 1 img",power_low)
 
 
 
