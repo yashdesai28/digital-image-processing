@@ -1,0 +1,428 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 18 22:03:57 2023
+
+@author: Admin
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 18 21:13:58 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img=cv2.imread("plus.png",0) 
+
+#structur element for detect words 
+kernel=np.ones((1,1),np.uint8)
+print(kernel)
+
+
+
+otsu_threshold, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU,)
+#6u tapadva mate object 
+lines=cv2.erode(image_result, kernel)
+
+#connected componets 
+totallabel,labels,stats,centrois=cv2.connectedComponentsWithStats(lines, 4, cv2.CV_32S)
+
+#applye color for diffrent objects 
+colors=np.random.randint(0,255,size=(totallabel,3),dtype=np.uint8)
+
+#backgound is black 
+colors[0]=[0,0,0]
+#applye a color for labels 
+colors_componet=colors[labels]
+
+print("total words=",totallabel-1)
+
+
+cv2.imshow("orijnal", img)
+cv2.imshow("erosion",lines)
+cv2.imshow("color img", colors_componet)
+
+
+
+ 
+
+
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+
+=====================connect componets ====================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 18 21:13:58 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img=cv2.imread("label.png",0) 
+
+#structur element for detect words 
+kernel=np.ones((3,5),np.uint8)
+
+#6u tapadva mate object 
+lines=cv2.erode(img, kernel)
+
+#connected componets 
+totallabel,labels,stats,centrois=cv2.connectedComponentsWithStats(lines, 8, cv2.CV_32S)
+
+#applye color for diffrent objects 
+colors=np.random.randint(0,255,size=(totallabel,3),dtype=np.uint8)
+
+#backgound is black 
+colors[0]=[0,0,0]
+#applye a color for labels 
+colors_componet=colors[labels]
+
+print("total words=",totallabel-1)
+
+
+cv2.imshow("orijnal", img)
+cv2.imshow("erosion",lines)
+cv2.imshow("color img", colors_componet)
+
+
+
+ 
+
+
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+
+
+
+==========obejct extration=======================
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 18 19:36:26 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+img=cv2.imread("ots.jpg",0)
+
+#otsu method 
+otsu_threshold, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU,)
+print("Obtained threshold: ", otsu_threshold)
+
+#after otsu method give a image a 255 is white and 0 is black all image value 
+
+#convert orignal image to multiply 255 is replce with 0 and 0 is replce with 1 
+binarydata=np.where(image_result>0,0,1)
+img2=img*binarydata
+img4=img2
+
+img3=cv2.imread('ncont.png',0)
+
+for i in range(0,400):    
+    for j in range(0,400):
+        
+        if img2[i][j]==0:
+            img4[i][j]=img3[i][j]
+        else:
+            img4[i][j]=img2[i][j]
+
+
+cv2.imwrite('yash.jpg', img2)
+cv2.imshow("ots", image_result)
+cv2.imshow("object extracted", cv2.imread("yash.jpg"))
+
+
+
+ 
+
+
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+
+
+
+
+========dilation===============
+
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 18 18:26:54 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+#img=cv2.imread("bitwc.png",0)
+
+img=cv2.imread("mero.jpg",0)
+
+
+kernel = np.ones((7, 7), np.uint8)
+
+erosion=cv2.dilate(img, kernel)
+
+cv2.imshow("orignal",img)
+cv2.imshow("dilation", erosion)
+
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
+
+
+
+===============erosion==================
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 15 23:06:20 2023
+
+@author: Admin
+"""
+
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+#img=cv2.imread("bitwc.png",0)
+
+img=cv2.imread("mero.jpg",0)
+
+
+kernel = np.ones((7, 7), np.uint8)
+
+erosion=cv2.erode(img, kernel)
+
+cv2.imshow("orignal",img)
+cv2.imshow("ersion", erosion)
+
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
+
+==============================closeing===================
+
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+#img=cv2.imread("bitwc.png",0)
+
+img=cv2.imread("fnoise.jpg",0)
+
+
+# binarize the image 
+binr = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1] 
+  
+# define the kernel 
+kernel = np.ones((3, 3), np.uint8)
+print(kernel)
+  
+# invert the image 
+invert = cv2.bitwise_not(binr) 
+
+
+
+closeing = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+cv2.imshow("orignal",img)
+
+cv2.imshow("invert", invert)
+cv2.imshow("closing", closeing)
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+================opening===================
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 15 22:32:03 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+#img=cv2.imread("bitwc.png",0)
+
+img=cv2.imread("fnoise.jpg",0)
+
+
+# binarize the image 
+binr = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1] 
+  
+# define the kernel 
+kernel = np.ones((3, 3), np.uint8)
+print(kernel)
+  
+# invert the image 
+invert = cv2.bitwise_not(binr) 
+
+
+
+opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+cv2.imshow("orignal",img)
+
+cv2.imshow("invert", invert)
+cv2.imshow("opening", opening)
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+========================gradiant=======================
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+#img=cv2.imread("bitwc.png",0)
+
+img=cv2.imread("abc.jpg",0)
+
+
+# binarize the image 
+binr = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1] 
+  
+# define the kernel 
+kernel = np.ones((7, 7), np.uint8)
+print(kernel)
+  
+# invert the image 
+invert = cv2.bitwise_not(binr) 
+
+
+dilation=cv2.dilate(invert, kernel)
+gradient = cv2.morphologyEx(img, cv2.MORPH_GRADIENT, kernel)
+cv2.imshow("orignal",img)
+cv2.imshow("dilation", dilation)
+cv2.imshow("invert", invert)
+cv2.imshow("gradient", gradient)
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
+==============mask and blurr============
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Oct 15 20:09:56 2023
+
+@author: Admin
+"""
+
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+img=cv2.imread("cat.png",0)
+img2=cv2.imread("nois.jfif",0)
+
+
+
+blur = cv2.GaussianBlur(img,(7,7),0)
+median = cv2.medianBlur(img2,5)
+
+sharp_filter=np.array([[-1,-1,-1],[-1,9,-1],[-1,-1,-1]])
+
+sharp_img=cv2.filter2D(median, 0, sharp_filter)
+
+
+
+
+cv2.imshow("orignal",img)
+
+# this syntax used to img blurring 
+cv2.imshow('Blurred Image', cv2.blur(img, (4,4)))
+cv2.imshow("gaussian blue",blur)
+cv2.imshow("median",median)
+cv2.imshow("orignal_noise",img2)
+cv2.imshow("sharpning",sharp_img)
+ 
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
