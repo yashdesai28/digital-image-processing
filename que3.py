@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Mon Aug 28 12:36:37 2023
+Created on Mon Oct 30 12:28:30 2023
 
 @author: bmiit202006100110086
 """
@@ -9,51 +9,48 @@ Created on Mon Aug 28 12:36:37 2023
 
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
+img=cv2.imread("9.jpg",0) 
 
-img=cv2.imread("4.jpg",0)
+#structur element for detect words 
+kernel=np.ones((1,1),np.uint8)
+otsu_threshold, image_result = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU,)
 
-
-
-orihist=cv2.calcHist([img],[0],None,[256],[0,256])
-
-min_percent = 10   # Low percentile
-max_percent = 85  # High percentile
-lo, hi = np.percentile(img, (min_percent, max_percent))
-
-print(lo,hi)
-
-# Apply linear "stretch" - lo goes to 0, and hi goes to 1
-res_img1 = (img.astype(float) - lo) / (hi-lo)
-
-cv2.imshow('res_img1', res_img1)
-
-#Multiply by 255, clamp range to [0, 255] and convert to uint8
-res_img = np.maximum(np.minimum(res_img1*255, 255), 0).astype(np.uint8)
-
-rehisto=cv2.calcHist([res_img],[0],None,[256],[0,256])
-
-
-
-plt.plot(orihist)
-plt.title("orignal img") 
-plt.xlabel("pixal value ")
-plt.ylabel("frequncy")
-plt.show()
-
-
-plt.plot(rehisto)
-plt.title("contrast  img")
-plt.xlabel("pixal value ")
-plt.ylabel("frequncy")
-plt.show()
-
-#Display images before and after linear "stretch":
-
-cv2.imshow('res_img', res_img)
+invert = cv2.bitwise_not(image_result)
+opening = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
 cv2.imshow("orignal",img)
+#6u tapadva mate object 
+lines=cv2.erode(invert, kernel)
+
+kernel1=np.ones((6,6),np.uint8)
+dailate=cv2.dilate(lines, kernel1)
 
 
-cv2.waitKey(0)
+#connected componets 
+totallabel,labels,stats,centrois=cv2.connectedComponentsWithStats(dailate, 8, cv2.CV_32S)
+
+#applye color for diffrent objects 
+colors=np.random.randint(0,255,size=(totallabel,3),dtype=np.uint8)
+
+#backgound is black 
+colors[0]=[0,0,0]
+#applye a color for labels 
+colors_componet=colors[labels]
+
+print("total words=",totallabel-1)
+
+
+cv2.imshow("orijnal", img)
+cv2.imshow("erosion",lines)
+cv2.imshow("color img", colors_componet)
+cv2.imshow("dailation", dailate)
+
+
+
+
+ 
+
+
+cv2.waitKey()
 cv2.destroyAllWindows()
