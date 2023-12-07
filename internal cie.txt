@@ -426,3 +426,302 @@ cv2.imshow("sharpning",sharp_img)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+
+
+=============================bitwise=======================================
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 20 19:43:51 2023
+
+@author: Admin
+"""
+
+import cv2
+import numpy as py
+import matplotlib.pyplot as plt 
+
+img1=cv2.imread("bitwc.png")
+img2=cv2.imread("bitws1.png")
+
+bit_and=cv2.bitwise_and(img1, img2)
+bit_or=cv2.bitwise_or(img1, img2)
+#bit_not=cv2.bitwise_not(img1, img2)
+bit_xor=cv2.bitwise_xor(img1, img2,mask=None)
+
+
+cv2.imshow("bitwc",img1)
+cv2.imshow("bitws",img2)
+cv2.imshow("bit_and",bit_and)
+cv2.imshow("bit_or",bit_or)
+cv2.imshow("bit_xor",bit_xor)
+
+
+
+
+
+
+
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+==================================blanding==============================
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 20 18:53:03 2023
+
+@author: Admin
+"""
+
+import cv2
+import numpy as py
+import matplotlib.pyplot as plt
+
+img1=cv2.imread("elon.jpg",0)
+img2=cv2.imread("hole.png",0)
+
+size=(805,987)
+
+reimg2=cv2.resize(img2, size)
+
+add2=cv2.addWeighted(img1, 1, reimg2, 0.5, 0.0)
+
+
+cv2.imshow("add2",add2)
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
+=================================contras birtness=============================
+ # -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 20 16:14:49 2023
+
+@author: Admin
+"""
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+
+def calbri(img):
+    
+    britness=np.mean(img)
+    return britness
+
+def calcon(img):
+    
+    contrast=np.std(img)
+    return contrast
+
+def histo(img):
+    
+    histogram=cv2.calcHist([img],[0],None,[256],[0,256])
+    return histogram
+
+def minmax(img):
+    
+    min_color=np.min(img)
+    max_color=np.max(img)
+    return min_color,max_color
+
+    
+    
+    
+
+
+img=cv2.imread("home.png",0)
+
+britness=calbri(img)
+contrast=calcon(img)
+histogram=histo(img)
+min_color,max_color=minmax(img)
+print("britness =",britness)
+print("contrast =",contrast)
+print("min_clor=",min_color," ","max_color=",max_color)
+
+#ret,img1=cv2.threshold(img, 127, 100, cv2.THRESH_BINARY)
+
+#cv2.imshow("helo",img1)
+
+adjusted = cv2.convertScaleAbs(img, alpha=1, beta=40)
+
+#contrast = 5. # Contrast control ( 0 to 127)
+#brightness = 2. # Brightness control (0-100)
+#out = cv2.addWeighted( img, contrast, img, 0, brightness)
+
+plt.plot(histogram)
+plt.title("histogram")
+plt.xlabel("pixal value")
+plt.ylabel("frecuncy")
+plt.show()
+
+cv2.imshow("convertscale",adjusted)
+#cv2.imshow("addweighted",out)
+cv2.imshow("orignal",img)
+
+
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+=====================================contrast britness===============================
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Aug 20 21:57:15 2023
+
+@author: Admin
+"""
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt 
+
+
+def nagative(img):
+    
+    nagativ=255-img
+    return nagativ
+
+def logtransformation(img):
+    
+    c = 255 / np.log(1 + np.max(img))
+    print(c)
+    log_img=c*(np.log1p(img))
+    log_img=np.uint8(log_img)
+    
+      
+# Apply log transformation method
+    #c = 255 / np.log(1 + np.max(img))
+    #log_image = c * (np.log(img + 1))
+   
+# Specify the data type so that
+# float value will be converted to int
+    #log_image = np.array(log_image, dtype = np.uint8)
+    return log_img
+
+def powerlow(img):
+    
+   # c = 255/(np.log(1 + np.max(img)))
+    #print(c,"==",255/(img/255))
+    power_low=np.array(255*(img/255)**3.6,dtype='uint8')
+    power_low1=np.array(255*(img/255)**1.5,dtype='uint8')
+    power_low3=np.array(255*(img/255)**1.3,dtype='uint8')
+    
+    return power_low,power_low1,power_low3
+    
+
+img=cv2.imread("1.jpg",0)
+img1=cv2.imread("1.jpg",0)
+img2=cv2.imread("1.jpg",0)
+
+size=(500,500)
+
+imgp=cv2.resize(img2,size)
+
+nagative_img=nagative(img)
+log_img=logtransformation(img1)
+power_low,power_low1,power_low3=powerlow(imgp)
+
+
+imgmain=cv2.hconcat([power_low1,power_low,power_low3])
+
+cv2.imshow("a2",imgmain)
+cv2.imshow("orijnal",imgp)
+cv2.imshow("nagative",nagative_img)
+cv2.imshow("logtransformation", log_img)
+cv2.imshow("power_log",power_low)
+
+logtrn=cv2.calcHist([log_img],[0],None,[256],[0,256])
+
+orignal=cv2.calcHist([img],[0],None,[256],[0,256])
+negative=cv2.calcHist([nagative_img],[0],None,[256],[0,256])
+law1=cv2.calcHist([power_low],[0],None,[256],[0,256])
+
+plt.plot(logtrn)
+plt.title("logtransformation")
+plt.xlabel("pixal value")
+plt.ylabel("frecuncy")
+plt.show()
+
+plt.plot(orignal)
+plt.title("orignal image")
+plt.xlabel("pixal value")
+plt.ylabel("frecuncy")
+plt.show()
+
+
+plt.plot(negative)
+plt.title("negative image")
+plt.xlabel("pixal value")
+plt.ylabel("frecuncy")
+plt.show()
+
+
+plt.plot(law1)
+plt.title("power_low1")
+plt.xlabel("pixal value")
+plt.ylabel("frecuncy")
+plt.show()
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+============================================================================background with and not with  ============================
+
+
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Aug 21 15:41:12 2023
+
+@author: Admin
+"""
+
+import cv2
+import numpy as np
+
+
+img1=cv2.imread("xrayh.jpg",0)
+
+size=(600,600)
+
+img=cv2.resize(img1,size)
+
+withb=np.zeros((img.shape[0],img.shape[1]),dtype='uint8')
+withoutb=np.zeros((img.shape[0],img.shape[1]),dtype='uint8')
+
+for i in range(0,600):
+    
+    for j in range(0,600):
+        
+        if img[i,j]>=150 and img[i,j]<=255:
+            withb[i,j]=255
+            withoutb[i,j]=255
+        else:
+            withb[i,j]=img[i][j]
+        
+
+cv2.imshow("orignal img",img)
+
+cv2.imshow("with background",withb)
+cv2.imshow("with out background",withoutb)
+
+
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
